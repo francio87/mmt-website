@@ -1,0 +1,3 @@
+Site: Marmitte dei Giganti
+Location: San Lazzaro, Fossombrone, Marche, Italy
+Build: Static HTML, CSS and JavaScript

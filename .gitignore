@@ -1,0 +1,37 @@
+# Test, audit e screenshot generati
+/audit/
+
+# Log e file temporanei
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Dipendenze/cache locali eventuali
+/node_modules/
+/.cache/
+/.parcel-cache/
+/.vite/
+/.turbo/
+
+# Output di build eventuali: il sito corrente non usa build step
+/dist/
+/build/
+
+# Config locali e segreti
+.env
+.env.*
+!.env.example
+
+# File locali di editor/IDE
+.vscode/
+.idea/
+
+# Cartelle locali di pi/Playwright se create nel progetto
+/.pi/tmp/
+/test-results/
+/playwright-report/

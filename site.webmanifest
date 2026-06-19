@@ -1,0 +1,19 @@
+{
+  "name": "Marmitte dei Giganti",
+  "short_name": "Marmitte",
+  "description": "Forra di San Lazzaro a Fossombrone, nelle Marche.",
+  "lang": "it-IT",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f1e8",
+  "theme_color": "#0c211f",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
