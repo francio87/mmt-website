@@ -37,6 +37,7 @@ Stack: HTML, CSS e JavaScript vanilla. Nessun framework e nessun build step.
 - Tipografia: `Manrope` per testo, `Cormorant Garamond` per titoli.
 - Riutilizzare variabili CSS esistenti (`--color-*`, `--radius-*`, `--shadow-*`).
 - Conservare struttura heading coerente: un solo `h1`, sezioni principali con `h2`.
+- Mantenere label/kicker di sezione (es. “Dove si trovano”) nello stesso contenitore del titolo a cui si riferiscono, subito sopra l’heading, evitando che restino allineati al margine esterno o separati visivamente dal titolo.
 - Aggiornare metadata, JSON-LD o sitemap solo se cambiano URL, contenuti principali o informazioni del luogo.
 
 ## JavaScript
@@ -84,6 +85,7 @@ Viewport minime da testare:
 Controllare:
 
 - assenza di overflow orizzontale;
+- allineamento e vicinanza visiva tra kicker/eyebrow, heading e testo introduttivo della stessa sezione;
 - elementi non tagliati;
 - tap target adeguati;
 - leggibilità e contrasto;

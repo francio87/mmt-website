@@ -60,7 +60,7 @@ const galleryItems = [
     caption: 'Il Metauro · Foto: Davide Tonelli'
   },
   {
-    src: 'assets/ponte-saltelli-lato-furlo.jpg',
+    src: 'assets/ponte-saltelli-lato-furlo.png',
     alt: 'Panorama dal Ponte dei Saltelli verso il lato del Furlo',
     caption: 'Verso il Ponte dei Saltelli · Foto: archivio marmittedeigiganti.com'
   }
