@@ -1,17 +1,47 @@
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<url>
-<loc>https://marmittedeigiganti.it/</loc>
-<lastmod>2021-07-20T22:27:53+00:00</lastmod>
-<priority>1.00</priority>
-</url>
-<url>
-<loc>https://marmittedeigiganti.it/cookie-policy/index.html</loc>
-<lastmod>2021-07-20T22:27:53+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://marmittedeigiganti.it/index.html</loc>
-<lastmod>2021-07-20T22:27:53+00:00</lastmod>
-<priority>0.64</priority>
-</url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://marmittedeigiganti.com/it/</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://marmittedeigiganti.com/it/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://marmittedeigiganti.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://marmittedeigiganti.com/" />
+    <image:image>
+      <image:loc>https://marmittedeigiganti.com/assets/hero-marmitte-dei-giganti.jpg</image:loc>
+      <image:title>Marmitte dei Giganti, Forra di San Lazzaro</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://marmittedeigiganti.com/en/</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://marmittedeigiganti.com/it/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://marmittedeigiganti.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://marmittedeigiganti.com/" />
+    <image:image>
+      <image:loc>https://marmittedeigiganti.com/assets/hero-marmitte-dei-giganti.jpg</image:loc>
+      <image:title>Marmitte dei Giganti, San Lazzaro Gorge</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://marmittedeigiganti.com/it/cookie-policy.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://marmittedeigiganti.com/it/cookie-policy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://marmittedeigiganti.com/en/cookie-policy.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://marmittedeigiganti.com/cookie-policy.html" />
+  </url>
+  <url>
+    <loc>https://marmittedeigiganti.com/en/cookie-policy.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://marmittedeigiganti.com/it/cookie-policy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://marmittedeigiganti.com/en/cookie-policy.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://marmittedeigiganti.com/cookie-policy.html" />
+  </url>
 </urlset>

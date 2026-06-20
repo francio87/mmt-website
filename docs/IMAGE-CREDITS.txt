@@ -1,0 +1,14 @@
+Image credits and provenance
+
+All JPEG photographs currently used in this static redesign were downloaded only from the existing website https://marmittedeigiganti.com/ and from its own /wp-content/uploads/ paths, as requested.
+
+No photographs were taken from third-party websites found during research.
+
+Files:
+- assets/hero-marmitte-dei-giganti.jpg — source: marmittedeigiganti.com/wp-content/uploads/bg-marmitte-dei-giganti-hero.jpg — EXIF copyright: TONELLI DAVIDE
+- assets/marmitte-lato-valle-canoa.jpg — source: marmittedeigiganti.com/wp-content/uploads/marmittedeigiganti-lato-valle-canoa.jpg — EXIF copyright: TONELLI DAVIDE
+- assets/ponte-marmitte-canoa.jpg — source: marmittedeigiganti.com/wp-content/uploads/ponte-marmitte-dei-giganti-canoa.jpg — EXIF artist: davide tonelli; EXIF copyright: TONELLI DAVIDE
+- assets/ponte-saltelli-valle-canoa.jpg — source: marmittedeigiganti.com/wp-content/uploads/ponte-saltelli-fossombrone-valle-canoa.jpg — EXIF copyright: TONELLI DAVIDE
+- assets/ponte-saltelli-lato-furlo.png — source: marmittedeigiganti.com/wp-content/uploads/ponte-saltelli-lato-furlo.jpg — converted to PNG; no author metadata found; credited visibly as archive marmittedeigiganti.com
+
+Before publication, confirm that the current site owner has rights to reuse these photographs in the new static version.
