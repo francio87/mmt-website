@@ -153,7 +153,7 @@ Object.assign(translations.en, {
   'Questa Cookie Policy potrà essere aggiornata quando verranno aggiunti o modificati servizi, strumenti di misurazione o funzionalità del sito.': 'This Cookie Policy may be updated when services, measurement tools or website features are added or changed.',
   'Questa pagina ha carattere informativo e dovrà essere verificata rispetto alla configurazione effettiva dei servizi prima della pubblicazione definitiva del tracciamento.': 'This page is for information purposes and must be checked against the actual configuration of the services before tracking is definitively published.',
   'Usiamo memorie locali tecniche necessarie e, solo con il tuo consenso, carichiamo servizi Google come Analytics e la mappa interattiva. Puoi accettare o rifiutare.': 'We use necessary technical local storage and, only with your consent, load Google services such as Analytics and the interactive map. You can accept or reject.',
-  'Accetta servizi Google': 'Accept Google services',
+  'Accetta': 'Accept',
   'Rifiuta': 'Reject',
   'Leggi la Cookie Policy': 'Read the Cookie Policy',
   'Preferenze cookie aggiornate.': 'Cookie preferences updated.'
@@ -524,7 +524,7 @@ function showCookieBanner() {
   banner.innerHTML = `
     <p>${translateString('Usiamo memorie locali tecniche necessarie e, solo con il tuo consenso, carichiamo servizi Google come Analytics e la mappa interattiva. Puoi accettare o rifiutare.')}</p>
     <div class="cookie-banner-actions">
-      <button class="button primary" type="button" data-cookie-accept>${translateString('Accetta servizi Google')}</button>
+      <button class="button primary" type="button" data-cookie-accept>${translateString('Accetta')}</button>
       <button class="button ghost" type="button" data-cookie-reject>${translateString('Rifiuta')}</button>
       <a class="button ghost" href="${getCookiePolicyPath()}">${translateString('Leggi la Cookie Policy')}</a>
     </div>
