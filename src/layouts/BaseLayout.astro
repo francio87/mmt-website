@@ -1,0 +1,44 @@
+---
+import '../styles/site.css';
+import { site, locales } from '../data/site.js';
+import { getContent } from '../data/content.js';
+import { hero } from '../data/images.js';
+const { lang = 'it', title, description, policy = false } = Astro.props;
+const locale = locales[lang];
+const canonicalPath = policy ? `/${lang}/cookie-policy/` : `/${lang}/`;
+const canonical = new URL(canonicalPath, site.url).href;
+const image = new URL(hero.src, site.url).href;
+const content = getContent(lang);
+const schema = policy ? null : {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.name, url: `${site.url}/`, inLanguage: lang === 'it' ? 'it-IT' : 'en-US' },
+    { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: lang === 'it' ? 'it-IT' : 'en-US' },
+    { '@type': 'TouristAttraction', '@id': `${site.url}/#attraction`, name: site.name, description, alternateName: ['Forra di San Lazzaro', 'Canyon del Metauro'], url: canonical, image: [image], address: { '@type': 'PostalAddress', streetAddress: 'Località San Lazzaro', addressLocality: 'Fossombrone', addressRegion: 'Marche', postalCode: '61034', addressCountry: 'IT' }, geo: { '@type': 'GeoCoordinates', latitude: site.coordinates.lat, longitude: site.coordinates.lng }, isAccessibleForFree: true, publicAccess: true },
+    { '@type': 'FAQPage', '@id': `${canonical}#faq`, mainEntity: content.faq.items.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }
+  ]
+};
+---
+<!doctype html>
+<html lang={locale.htmlLang}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  <meta name="description" content={description}>
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0c211f">
+  <link rel="canonical" href={canonical}>
+  <link rel="alternate" hreflang="it" href={`${site.url}/it/` + (policy ? 'cookie-policy/' : '')}>
+  <link rel="alternate" hreflang="en" href={`${site.url}/en/` + (policy ? 'cookie-policy/' : '')}>
+  <link rel="alternate" hreflang="x-default" href={`${site.url}/` + (policy ? 'cookie-policy/' : '')}>
+  <meta property="og:type" content="website"><meta property="og:locale" content={locale.locale}><meta property="og:site_name" content={site.name}><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:image" content={image}>
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content={title}><meta name="twitter:description" content={description}><meta name="twitter:image" content={image}>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  <title>{title}</title>
+</head>
+<body data-language={lang} data-policy={policy ? 'true' : 'false'}>
+  <slot />
+</body>
+</html>

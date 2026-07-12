@@ -1,0 +1,6 @@
+---
+import { Image } from 'astro:assets';
+import { gorge } from '../../data/images.js';
+const { content } = Astro.props;
+---
+<section class="story section" aria-labelledby="story-title"><div class="story-media reveal"><Image src={gorge} widths={[480, 768, 1200, 1382]} sizes="(min-width: 800px) 42vw, 100vw" alt={content.alt} loading="lazy" decoding="async" /></div><div class="story-copy reveal"><p class="eyebrow dark">{content.kicker}</p><h2 id="story-title">{content.title}</h2>{content.paragraphs.map((paragraph) => <p>{paragraph}</p>)}<ul class="text-list">{content.facts.map((fact) => <li>{fact}</li>)}</ul></div></section>

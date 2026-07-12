@@ -28,11 +28,15 @@ Thumbs.db
 .env.*
 !.env.example
 
-# File locali di editor/IDE
+# File locali di editor/IDE e istruzioni per agenti locali
 .vscode/
 .idea/
+AGENTS.md
 
 # Cartelle locali di pi/Playwright se create nel progetto
 /.pi/tmp/
 /test-results/
 /playwright-report/
+
+# Astro
+/.astro/

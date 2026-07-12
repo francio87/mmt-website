@@ -1,0 +1,38 @@
+<script>
+  const header = document.querySelector('[data-header]');
+  const menuToggle = document.querySelector('[data-menu-toggle]');
+  const nav = document.querySelector('[data-nav]');
+  const backToTop = document.querySelector('[data-back-to-top]');
+  let menuTrigger;
+
+  function closeMenu() {
+    if (!menuToggle || !nav || !header) return;
+    menuToggle.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('is-open');
+    header.classList.remove('is-open');
+    document.body.classList.remove('menu-open');
+    menuTrigger?.focus();
+  }
+
+  function openMenu() {
+    if (!menuToggle || !nav || !header) return;
+    menuTrigger = document.activeElement;
+    menuToggle.setAttribute('aria-expanded', 'true');
+    nav.classList.add('is-open');
+    header.classList.add('is-open');
+    document.body.classList.add('menu-open');
+  }
+
+  menuToggle?.addEventListener('click', () => menuToggle.getAttribute('aria-expanded') === 'true' ? closeMenu() : openMenu());
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+
+  function updateScrollState() {
+    header?.classList.toggle('is-scrolled', document.body.dataset.policy === 'true' || window.scrollY > 16);
+    const threshold = document.getElementById('top')?.offsetHeight * .75 || window.innerHeight * .75;
+    backToTop?.classList.toggle('is-visible', window.scrollY > threshold);
+  }
+
+  window.addEventListener('scroll', updateScrollState, { passive: true });
+  updateScrollState();
+</script>

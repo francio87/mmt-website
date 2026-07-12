@@ -1,0 +1,22 @@
+{
+  "name": "mmt-website",
+  "version": "1.0.0",
+  "description": "Sito statico Astro per le Marmitte dei Giganti di Fossombrone.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.61.1",
+    "astro": "^7.0.7"
+  },
+  "private": true,
+  "type": "module"
+}

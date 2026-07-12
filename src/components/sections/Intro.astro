@@ -1,0 +1,6 @@
+---
+import { Image } from 'astro:assets';
+import { valley } from '../../data/images.js';
+const { content } = Astro.props;
+---
+<section class="intro section" id="luogo" aria-labelledby="luogo-title"><div class="intro-grid"><div class="intro-copy reveal"><p class="section-kicker">{content.kicker}</p><h2 id="luogo-title">{content.title}</h2>{content.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</div><figure class="intro-figure reveal"><Image src={valley} widths={[640, 960, 1555]} sizes="(min-width: 800px) 46vw, 100vw" alt={content.alt} loading="lazy" decoding="async" /><figcaption>{content.caption}</figcaption></figure></div></section>

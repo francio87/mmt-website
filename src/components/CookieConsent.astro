@@ -1,0 +1,110 @@
+---
+import { site } from '../data/site.js';
+const { lang } = Astro.props;
+const copy = lang === 'en'
+  ? { message: 'We use necessary local storage and, only with your consent, load Google Analytics. You can accept or reject.', accept: 'Accept', reject: 'Reject', policy: 'Read the Cookie Policy' }
+  : { message: 'Usiamo memorie locali tecniche necessarie e, solo con il tuo consenso, carichiamo Google Analytics. Puoi accettare o rifiutare.', accept: 'Accetta', reject: 'Rifiuta', policy: 'Leggi la Cookie Policy' };
+---
+<section class="cookie-banner" data-cookie-banner data-analytics-id={site.analyticsId} hidden aria-label="Cookie" aria-live="polite">
+  <p>{copy.message}</p>
+  <div class="cookie-banner-actions">
+    <button class="button primary" type="button" data-cookie-consent="accepted">{copy.accept}</button>
+    <button class="button ghost" type="button" data-cookie-consent="rejected">{copy.reject}</button>
+    <a class="button ghost" href={`/${lang}/cookie-policy/`}>{copy.policy}</a>
+  </div>
+</section>
+
+<script>
+  const consentKey = 'mmt-cookie-consent';
+  const consentVersion = '2026-07-12';
+  const banner = document.querySelector('[data-cookie-banner]');
+  const analyticsId = banner?.dataset.analyticsId;
+
+  function readConsent() {
+    const stored = localStorage.getItem(consentKey);
+    if (!stored) return null;
+    try {
+      const consent = JSON.parse(stored);
+      return consent?.value === 'accepted' || consent?.value === 'rejected' ? consent.value : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveConsent(value) {
+    localStorage.setItem(consentKey, JSON.stringify({ value, updatedAt: new Date().toISOString(), version: consentVersion }));
+  }
+
+  function setAnalyticsDisabled(disabled) {
+    if (analyticsId) window[`ga-disable-${analyticsId}`] = disabled;
+  }
+
+  function updateAnalyticsConsent(value) {
+    if (!window.gtag) return;
+    window.gtag('consent', 'update', { analytics_storage: value });
+  }
+
+  function deleteAnalyticsCookies() {
+    const names = document.cookie.split(';').map((cookie) => cookie.trim().split('=')[0]).filter((name) => /^_ga(?:_|$)/i.test(name));
+    const paths = ['/', window.location.pathname];
+    const domains = ['', `; domain=${window.location.hostname}`, `; domain=.${window.location.hostname}`];
+    names.forEach((name) => paths.forEach((path) => domains.forEach((domain) => {
+      document.cookie = `${name}=; Max-Age=0; path=${path}${domain}; SameSite=Lax`;
+    })));
+  }
+
+  function revokeAnalytics() {
+    setAnalyticsDisabled(true);
+    updateAnalyticsConsent('denied');
+    deleteAnalyticsCookies();
+  }
+
+  function loadAnalytics() {
+    if (!analyticsId) return;
+    setAnalyticsDisabled(false);
+    if (window.gtag) {
+      updateAnalyticsConsent('granted');
+      window.gtag('config', analyticsId, { anonymize_ip: true });
+      return;
+    }
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('consent', 'default', { analytics_storage: 'granted' });
+    window.gtag('config', analyticsId, { anonymize_ip: true });
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(analyticsId)}`;
+    document.head.appendChild(script);
+  }
+
+  function applyConsent(value) {
+    saveConsent(value);
+    banner.hidden = true;
+    if (value === 'accepted') {
+      loadAnalytics();
+      return;
+    }
+    revokeAnalytics();
+    window.location.reload();
+  }
+
+  function showConsentBanner() {
+    const consent = readConsent();
+    if (consent === 'accepted') {
+      loadAnalytics();
+      return;
+    }
+    if (consent === 'rejected') revokeAnalytics();
+    else banner.hidden = false;
+  }
+
+  banner?.querySelectorAll('[data-cookie-consent]').forEach((button) => button.addEventListener('click', () => applyConsent(button.dataset.cookieConsent)));
+  document.querySelector('[data-reset-cookie-consent]')?.addEventListener('click', () => {
+    revokeAnalytics();
+    localStorage.removeItem(consentKey);
+    banner.hidden = false;
+    banner.querySelector('[data-cookie-consent="accepted"]')?.focus();
+  });
+  showConsentBanner();
+</script>

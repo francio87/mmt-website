@@ -1,0 +1,12 @@
+---
+import { Image } from 'astro:assets';
+import { hero } from '../../data/images.js';
+const { content } = Astro.props;
+---
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-media" aria-hidden="true"><Image src={hero} widths={[640, 960, 1440, 2000]} sizes="100vw" alt="" loading="eager" fetchpriority="high" decoding="async" /></div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="hero-content"><p class="eyebrow">{content.eyebrow}</p><h1 id="hero-title">{content.title}</h1><p class="hero-lead">{content.lead}</p><div class="hero-actions"><a class="button primary" href="#luogo">{content.primary}</a><a class="button ghost" href="#galleria">{content.secondary}</a></div></div>
+  <a class="scroll-cue" href="#luogo" aria-label={content.primary}><span aria-hidden="true"></span></a>
+  <p class="hero-credit">{content.credit}</p>
+</section>

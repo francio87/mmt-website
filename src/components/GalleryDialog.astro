@@ -1,0 +1,28 @@
+---
+const { lang, items } = Astro.props;
+const labels = lang === 'en'
+  ? { gallery: 'Enlarged image', close: 'Close enlarged image', top: 'Back to top' }
+  : { gallery: 'Immagine ingrandita', close: 'Chiudi immagine ingrandita', top: 'Torna in cima' };
+---
+<dialog class="lightbox" aria-label={labels.gallery} data-gallery-dialog data-gallery={JSON.stringify(items)}>
+  <button class="lightbox-close" type="button" aria-label={labels.close} data-gallery-close>×</button>
+  <figure class="lightbox-figure"><img src="" alt="" data-gallery-image><figcaption data-gallery-caption></figcaption></figure>
+</dialog>
+<a class="back-to-top" href="#top" aria-label={labels.top} data-back-to-top><span aria-hidden="true">↑</span><span class="sr-only">{labels.top}</span></a>
+
+<script>
+  const dialog = document.querySelector('[data-gallery-dialog]');
+  const gallery = JSON.parse(dialog?.dataset.gallery || '[]');
+  const image = dialog?.querySelector('[data-gallery-image]');
+  const caption = dialog?.querySelector('[data-gallery-caption]');
+
+  document.querySelectorAll('[data-lightbox-index]').forEach((trigger) => trigger.addEventListener('click', () => {
+    const item = gallery[Number(trigger.dataset.lightboxIndex)];
+    if (!item || !image || !caption) return;
+    image.src = item.src; image.alt = item.alt; caption.textContent = item.caption;
+    dialog?.showModal();
+  }));
+  dialog?.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog.close());
+  dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+  dialog?.addEventListener('close', () => image?.removeAttribute('src'));
+</script>

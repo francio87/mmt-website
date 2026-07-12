@@ -1,0 +1,4 @@
+---
+const { content } = Astro.props;
+---
+<section class="faq section" id="faq" aria-labelledby="faq-title"><div class="faq-heading"><p class="eyebrow dark">{content.kicker}</p><h2 id="faq-title">{content.title}</h2></div><div class="faq-list">{content.items.map(([question, answer]) => <article class="faq-item"><h3>{question}</h3><p>{answer}</p></article>)}</div></section>

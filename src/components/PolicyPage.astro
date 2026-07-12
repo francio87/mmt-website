@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import CookieConsent from './CookieConsent.astro';
+import NavigationEnhancements from './NavigationEnhancements.astro';
+import { getContent } from '../data/content.js';
+const { lang } = Astro.props;
+const content = getContent(lang);
+const description = lang === 'en' ? 'Cookie Policy of the Marmitte dei Giganti website.' : 'Cookie Policy del sito Marmitte dei Giganti.';
+const googlePrivacyLabel = lang === 'en' ? 'Google Privacy Policy' : 'Informativa privacy di Google';
+---
+<BaseLayout lang={lang} title="Cookie Policy | Marmitte dei Giganti" description={description} policy>
+  <a class="skip-link" href="#main">{lang === 'en' ? 'Skip to content' : 'Salta al contenuto'}</a>
+  <Header lang={lang} nav={content.nav} policy />
+  <main id="main" class="policy-page"><section class="section"><div class="intro-grid"><div class="intro-copy policy-copy"><p class="eyebrow dark">{content.policy.kicker}</p><h1>Cookie Policy</h1><p>{content.policy.updated}</p><p>{content.policy.intro}</p>{content.policy.sections.map((section, index) => <Fragment><h2>{section.title}</h2>{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}{section.details && <dl class="policy-details">{section.details.map(([term, value]) => <div><dt>{term}</dt><dd>{value}</dd></div>)}</dl>}{index === 2 && <p><a class="social-link" href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{googlePrivacyLabel}</a></p>}{index === 3 && <button class="button outline" type="button" data-reset-cookie-consent>{content.policy.reset}</button>}</Fragment>)}<a class="button outline" href={`/${lang}/`}>{content.policy.home}</a></div></div></section></main>
+  <Footer lang={lang} content={content.footer} />
+  <NavigationEnhancements />
+  <CookieConsent lang={lang} />
+</BaseLayout>

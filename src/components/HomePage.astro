@@ -1,0 +1,49 @@
+---
+import { getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import GalleryDialog from './GalleryDialog.astro';
+import CookieConsent from './CookieConsent.astro';
+import NavigationEnhancements from './NavigationEnhancements.astro';
+import RevealEnhancements from './RevealEnhancements.astro';
+import Hero from './sections/Hero.astro';
+import Intro from './sections/Intro.astro';
+import Story from './sections/Story.astro';
+import Geology from './sections/Geology.astro';
+import Visit from './sections/Visit.astro';
+import Gallery from './sections/Gallery.astro';
+import Map from './sections/Map.astro';
+import Territory from './sections/Territory.astro';
+import Faq from './sections/Faq.astro';
+import Social from './sections/Social.astro';
+import { locales } from '../data/site.js';
+import { getContent } from '../data/content.js';
+import { galleryImages } from '../data/images.js';
+const { lang } = Astro.props;
+const locale = locales[lang];
+const content = getContent(lang);
+const lightboxAssets = await Promise.all(galleryImages.map((image) => getImage({ src: image, width: Math.min(image.width, 1440), format: 'webp', quality: 75 })));
+const lightboxItems = content.gallery.items.map((item, index) => ({ src: lightboxAssets[index].src, alt: item.alt, caption: `${item.title} · ${item.credit}` }));
+---
+<BaseLayout lang={lang} title={locale.title} description={locale.description}>
+  <a class="skip-link" href="#main">{lang === 'en' ? 'Skip to content' : 'Salta al contenuto'}</a>
+  <Header lang={lang} nav={content.nav} />
+  <main id="main">
+    <Hero content={content.hero} />
+    <Intro content={content.intro} />
+    <Story content={content.story} />
+    <Geology content={content.geology} />
+    <Visit content={content.visit} />
+    <Gallery content={content.gallery} />
+    <Map content={content.map} />
+    <Territory content={content.territory} />
+    <Faq content={content.faq} />
+    <Social content={content.social} />
+  </main>
+  <GalleryDialog lang={lang} items={lightboxItems} />
+  <Footer lang={lang} content={content.footer} />
+  <NavigationEnhancements />
+  <RevealEnhancements />
+  <CookieConsent lang={lang} />
+</BaseLayout>

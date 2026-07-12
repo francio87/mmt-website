@@ -1,0 +1,7 @@
+---
+const { lang, content } = Astro.props;
+const home = `/${lang}/`;
+const serviceLabel = lang === 'en' ? 'Service links' : 'Link di servizio';
+const social = lang === 'en' ? 'Social' : 'Social';
+---
+<footer class="site-footer"><div class="site-footer-inner"><div><strong>Marmitte dei Giganti</strong><p>{content.address}</p></div><nav aria-label={serviceLabel}><a href={`${home}#top`}>{content.top}</a><a href={`${home}#social`}>{social}</a><a href={`/${lang}/cookie-policy/`}>Cookie Policy</a></nav></div></footer>
