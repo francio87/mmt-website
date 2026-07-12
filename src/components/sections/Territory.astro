@@ -1,6 +1,10 @@
 ---
 import { Image } from 'astro:assets';
-import { hero } from '../../data/images.js';
+import fossombronePanorama from '../../assets/fossombrone-panorama.webp';
+import corsoGaribaldi from '../../assets/fossombrone-corso-garibaldi.webp';
+import furloLandscape from '../../assets/gola-del-furlo-landscape.webp';
+import furloTunnel from '../../assets/furlo-tunnel-south.webp';
 const { content } = Astro.props;
+const stopImages = [fossombronePanorama, corsoGaribaldi, furloLandscape, furloTunnel];
 ---
-<section class="territory section" id="territorio" aria-labelledby="territorio-title"><Image class="territory-background" src={hero} widths={[960, 1440, 2000]} sizes="100vw" alt="" loading="lazy" decoding="async" /><div class="territory-inner reveal"><p class="eyebrow">{content.kicker}</p><h2 id="territorio-title">{content.title}</h2><p>{content.text}</p></div></section>
+<section class="territory section" id="territorio" aria-labelledby="territorio-title"><div class="territory-inner reveal"><p class="eyebrow">{content.kicker}</p><h2 id="territorio-title">{content.title}</h2><p class="territory-intro">{content.intro}</p><div class="territory-stops">{content.stops.map((stop, index) => <article><Image src={stopImages[index]} widths={[480, 768]} sizes="(min-width: 700px) 50vw, 100vw" alt={stop.alt} loading="lazy" decoding="async" /><div class="territory-stop-copy"><h3>{stop.title}</h3><p>{stop.text}</p><small class="territory-credit"><a href={stop.credit.sourceUrl} target="_blank" rel="noopener noreferrer">{stop.credit.sourceLabel}</a> · {stop.credit.author} · <a href={stop.credit.licenseUrl} target="_blank" rel="noopener noreferrer">{stop.credit.license}</a></small></div></article>)}</div><div class="territory-sources"><span>{content.sources.label}:</span>{content.sources.links.map(([label, href]) => <a href={href} target="_blank" rel="noopener noreferrer">{label}</a>)}</div></div></section>

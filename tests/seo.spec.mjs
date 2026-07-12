@@ -43,7 +43,7 @@ test('attraction schema and external links use the configured destinations', asy
   for (const { href, rel } of externalLinks) {
     const url = new URL(href);
     expect(url.protocol).toBe('https:');
-    expect(['www.google.com', 'www.instagram.com']).toContain(url.hostname);
+    expect(['www.google.com', 'www.instagram.com', 'www.comune.fossombrone.ps.it', 'commons.wikimedia.org', 'creativecommons.org', 'it.wikipedia.org']).toContain(url.hostname);
     expect(rel.split(/\s+/)).toContain('noopener');
     expect(rel.split(/\s+/)).toContain('noreferrer');
   }
