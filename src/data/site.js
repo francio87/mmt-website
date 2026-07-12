@@ -2,7 +2,11 @@ export const site = {
   url: 'https://marmittedeigiganti.com',
   name: 'Marmitte dei Giganti',
   coordinates: { lat: 43.683280, lng: 12.776999 },
-  analyticsId: 'G-J2K8PKY3C2'
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=43.683280,12.776999',
+  socialLinks: { instagram: 'https://www.instagram.com/marmittedeigiganti/' },
+  analyticsId: 'G-J2K8PKY3C2',
+  // Set to false to disable custom GA4 interaction events without disabling Analytics itself.
+  analyticsEventsEnabled: true
 };
 
 export const locales = {

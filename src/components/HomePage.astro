@@ -20,13 +20,13 @@ import Social from './sections/Social.astro';
 import { locales } from '../data/site.js';
 import { getContent } from '../data/content.js';
 import { galleryImages } from '../data/images.js';
-const { lang } = Astro.props;
+const { lang, defaultRoute = false } = Astro.props;
 const locale = locales[lang];
 const content = getContent(lang);
 const lightboxAssets = await Promise.all(galleryImages.map((image) => getImage({ src: image, width: Math.min(image.width, 1440), format: 'webp', quality: 75 })));
 const lightboxItems = content.gallery.items.map((item, index) => ({ src: lightboxAssets[index].src, alt: item.alt, caption: `${item.title} · ${item.credit}` }));
 ---
-<BaseLayout lang={lang} title={locale.title} description={locale.description}>
+<BaseLayout lang={lang} title={locale.title} description={locale.description} defaultRoute={defaultRoute}>
   <a class="skip-link" href="#main">{lang === 'en' ? 'Skip to content' : 'Salta al contenuto'}</a>
   <Header lang={lang} nav={content.nav} />
   <main id="main">

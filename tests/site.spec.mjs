@@ -45,6 +45,21 @@ test('analytics stays unloaded until consent', async ({ page }) => {
   expect(await page.evaluate(() => localStorage.getItem('mmt-cookie-consent'))).toContain('rejected');
 });
 
+test('custom interaction events require Analytics consent', async ({ page }) => {
+  await page.goto('/it/');
+  await page.locator('[data-analytics-event="gallery_open"]').first().click();
+  expect(await page.evaluate(() => Boolean(window.gtag))).toBe(false);
+  expect(await page.evaluate(() => Boolean(window.dataLayer))).toBe(false);
+
+  await page.evaluate(() => localStorage.setItem('mmt-cookie-consent', JSON.stringify({ value: 'accepted', updatedAt: new Date().toISOString(), version: '2026-07-12' })));
+  await page.reload();
+  await page.locator('[data-analytics-event="gallery_open"]').first().click();
+  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => {
+    const [command, eventName, parameters] = Array.from(entry);
+    return command === 'event' && eventName === 'gallery_open' && parameters?.language === 'it' && parameters?.gallery_item === 1;
+  }))).toBe(true);
+});
+
 test('changing preferences revokes Analytics and deletes its cookies', async ({ page }) => {
   await page.goto('/it/');
   await page.getByRole('button', { name: 'Accetta' }).click();

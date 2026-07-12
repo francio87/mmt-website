@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { mapPreview } from '../../data/images.js';
+import { site } from '../../data/site.js';
 const { content } = Astro.props;
-const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=43.683280,12.776999';
 ---
-<section class="map-section section" id="mappa" aria-labelledby="mappa-title"><div class="map-copy reveal"><p class="eyebrow dark">{content.kicker}</p><h2 id="mappa-title">{content.title}</h2><p>{content.text}</p></div><div class="map-frame reveal"><a class="google-map map-link" href={mapsUrl} target="_blank" rel="noopener noreferrer" aria-label={content.linkLabel}><Image src={mapPreview} widths={[480, 601]} sizes="(min-width: 800px) 55vw, 100vw" alt={content.alt} loading="lazy" decoding="async" /></a></div></section>
+<section class="map-section section" id="mappa" aria-labelledby="mappa-title"><div class="map-copy reveal"><p class="eyebrow dark">{content.kicker}</p><h2 id="mappa-title">{content.title}</h2><p>{content.text}</p></div><div class="map-frame reveal"><a class="google-map map-link" href={site.mapsUrl} target="_blank" rel="noopener noreferrer" aria-label={content.linkLabel} data-analytics-event="map_open" data-analytics-destination="google_maps"><Image src={mapPreview} widths={[480, 601]} sizes="(min-width: 800px) 55vw, 100vw" alt={content.alt} loading="lazy" decoding="async" /></a></div></section>

@@ -5,7 +5,7 @@ const copy = lang === 'en'
   ? { message: 'We use necessary local storage and, only with your consent, load Google Analytics. You can accept or reject.', accept: 'Accept', reject: 'Reject', policy: 'Read the Cookie Policy' }
   : { message: 'Usiamo memorie locali tecniche necessarie e, solo con il tuo consenso, carichiamo Google Analytics. Puoi accettare o rifiutare.', accept: 'Accetta', reject: 'Rifiuta', policy: 'Leggi la Cookie Policy' };
 ---
-<section class="cookie-banner" data-cookie-banner data-analytics-id={site.analyticsId} hidden aria-label="Cookie" aria-live="polite">
+<section class="cookie-banner" data-cookie-banner data-analytics-id={site.analyticsId} data-analytics-events-enabled={site.analyticsEventsEnabled ? 'true' : 'false'} hidden aria-label="Cookie" aria-live="polite">
   <p>{copy.message}</p>
   <div class="cookie-banner-actions">
     <button class="button primary" type="button" data-cookie-consent="accepted">{copy.accept}</button>
@@ -19,6 +19,7 @@ const copy = lang === 'en'
   const consentVersion = '2026-07-12';
   const banner = document.querySelector('[data-cookie-banner]');
   const analyticsId = banner?.dataset.analyticsId;
+  const analyticsEventsEnabled = banner?.dataset.analyticsEventsEnabled === 'true';
 
   function readConsent() {
     const stored = localStorage.getItem(consentKey);
@@ -78,6 +79,17 @@ const copy = lang === 'en'
     document.head.appendChild(script);
   }
 
+  function trackInteraction(target) {
+    const eventName = target.dataset.analyticsEvent;
+    if (!analyticsEventsEnabled || !eventName || readConsent() !== 'accepted' || !window.gtag) return;
+
+    const parameters = { language: document.body.dataset.language };
+    if (target.dataset.analyticsDestination) parameters.destination = target.dataset.analyticsDestination;
+    if (target.dataset.analyticsLanguage) parameters.selected_language = target.dataset.analyticsLanguage;
+    if (target.dataset.analyticsItem) parameters.gallery_item = Number(target.dataset.analyticsItem);
+    window.gtag('event', eventName, parameters);
+  }
+
   function applyConsent(value) {
     saveConsent(value);
     banner.hidden = true;
@@ -100,6 +112,12 @@ const copy = lang === 'en'
   }
 
   banner?.querySelectorAll('[data-cookie-consent]').forEach((button) => button.addEventListener('click', () => applyConsent(button.dataset.cookieConsent)));
+  if (analyticsEventsEnabled) {
+    document.addEventListener('click', (event) => {
+      const target = event.target.closest('[data-analytics-event]');
+      if (target) trackInteraction(target);
+    });
+  }
   document.querySelector('[data-reset-cookie-consent]')?.addEventListener('click', () => {
     revokeAnalytics();
     localStorage.removeItem(consentKey);

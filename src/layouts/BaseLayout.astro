@@ -3,9 +3,11 @@ import '../styles/site.css';
 import { site, locales } from '../data/site.js';
 import { getContent } from '../data/content.js';
 import { hero } from '../data/images.js';
-const { lang = 'it', title, description, policy = false } = Astro.props;
+const { lang = 'it', title, description, policy = false, defaultRoute = false } = Astro.props;
 const locale = locales[lang];
-const canonicalPath = policy ? `/${lang}/cookie-policy/` : `/${lang}/`;
+const canonicalPath = defaultRoute
+  ? (policy ? '/cookie-policy/' : '/')
+  : (policy ? `/${lang}/cookie-policy/` : `/${lang}/`);
 const canonical = new URL(canonicalPath, site.url).href;
 const image = new URL(hero.src, site.url).href;
 const content = getContent(lang);
@@ -14,7 +16,7 @@ const schema = policy ? null : {
   '@graph': [
     { '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.name, url: `${site.url}/`, inLanguage: lang === 'it' ? 'it-IT' : 'en-US' },
     { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: lang === 'it' ? 'it-IT' : 'en-US' },
-    { '@type': 'TouristAttraction', '@id': `${site.url}/#attraction`, name: site.name, description, alternateName: ['Forra di San Lazzaro', 'Canyon del Metauro'], url: canonical, image: [image], address: { '@type': 'PostalAddress', streetAddress: 'Località San Lazzaro', addressLocality: 'Fossombrone', addressRegion: 'Marche', postalCode: '61034', addressCountry: 'IT' }, geo: { '@type': 'GeoCoordinates', latitude: site.coordinates.lat, longitude: site.coordinates.lng }, isAccessibleForFree: true, publicAccess: true },
+    { '@type': 'TouristAttraction', '@id': `${site.url}/#attraction`, name: site.name, description, alternateName: ['Forra di San Lazzaro', 'Canyon del Metauro'], url: canonical, image: [image], hasMap: site.mapsUrl, sameAs: [site.socialLinks.instagram], address: { '@type': 'PostalAddress', streetAddress: 'Località San Lazzaro', addressLocality: 'Fossombrone', addressRegion: 'Marche', postalCode: '61034', addressCountry: 'IT' }, geo: { '@type': 'GeoCoordinates', latitude: site.coordinates.lat, longitude: site.coordinates.lng }, isAccessibleForFree: true, publicAccess: true },
     { '@type': 'FAQPage', '@id': `${canonical}#faq`, mainEntity: content.faq.items.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }
   ]
 };
