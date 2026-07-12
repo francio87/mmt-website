@@ -27,6 +27,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+/SFTP_KNOWN_HOSTS.txt
 
 # File locali di editor/IDE e istruzioni per agenti locali
 .vscode/
