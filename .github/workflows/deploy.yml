@@ -1,10 +1,11 @@
 name: Build and deploy to SFTP
 
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
+  # Per riattivare il deploy automatico su master, ripristinare:
+  # push:
+  #   branches:
+  #     - master
 
 permissions:
   contents: read
