@@ -7,6 +7,20 @@ const viewports = [
 ];
 
 for (const viewport of viewports) {
+  test(`custom 404 ${viewport.name} has no overflow and returns 404`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    const response = await page.goto('/pagina-inesistente/');
+    expect(response.status()).toBe(404);
+    await expect(page.getByRole('heading', { name: 'Questa pagina non si trova.' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Torna alla home', exact: true })).toHaveAttribute('href', '/it/');
+    await expect(page.getByRole('link', { name: 'English home' })).toHaveAttribute('href', '/en/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  });
+}
+
+for (const viewport of viewports) {
   test(`home ${viewport.name} has no horizontal overflow`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto('/it/');

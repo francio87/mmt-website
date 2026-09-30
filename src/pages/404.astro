@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout lang="it" title="Pagina non trovata | Marmitte dei Giganti" description="La pagina che cerchi non è disponibile. Torna alla home delle Marmitte dei Giganti di Fossombrone." notFound>
+  <a class="skip-link" href="#main">Salta al contenuto</a>
+  <main id="main" class="not-found-page">
+    <div class="not-found-shell">
+      <a class="brand not-found-brand" href="/it/" aria-label="Marmitte dei Giganti — torna alla home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><path d="M13 53c7-8 10-16 8-25-2-9 2-17 11-22" /><path d="M52 11c-9 6-13 14-10 25 3 10-3 18-16 22" /><path d="M25 55c8-7 10-14 6-21-4-8 0-15 9-20" /><path d="M16 43c7-3 15-2 22 4" /><circle cx="39" cy="31" r="5" /></svg></span>
+        <span class="brand-text">Marmitte dei Giganti</span>
+      </a>
+      <section class="not-found-card" aria-labelledby="not-found-title">
+        <div class="not-found-copy">
+          <p class="eyebrow dark">Errore 404 · San Lazzaro</p>
+          <h1 id="not-found-title">Questa pagina non si trova.</h1>
+          <p>Forse la corrente l’ha portata altrove. Torna alla home e riparti alla scoperta della Forra di San Lazzaro.</p>
+          <p class="not-found-english" lang="en">The page you’re looking for isn’t here. Head back to the homepage to explore San Lazzaro Gorge.</p>
+          <nav class="not-found-actions" aria-label="Scegli la lingua della homepage">
+            <a class="button primary" href="/it/">Torna alla home</a>
+            <a class="button outline" href="/en/" lang="en">English home</a>
+          </nav>
+        </div>
+        <div class="not-found-art" aria-hidden="true">
+          <svg viewBox="0 0 360 260" focusable="false">
+            <ellipse cx="180" cy="142" rx="158" ry="94" fill="#d8c99e" />
+            <ellipse cx="180" cy="135" rx="136" ry="79" fill="#87905a" />
+            <ellipse cx="180" cy="128" rx="111" ry="63" fill="#1f6870" />
+            <ellipse cx="180" cy="120" rx="80" ry="44" fill="#162d22" />
+            <path d="M62 132c35-52 91-69 142-60 36 6 66 22 94 49" fill="none" stroke="#fff9df" stroke-opacity=".5" stroke-width="3" stroke-linecap="round" />
+            <path d="M103 166c29 17 72 23 111 12" fill="none" stroke="#93a84e" stroke-width="4" stroke-linecap="round" />
+          </svg>
+          <span>404</span>
+        </div>
+      </section>
+      <p class="not-found-location">Marmitte dei Giganti · Fossombrone, Marche</p>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .not-found-page {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 36px clamp(18px, 5vw, 64px);
+    background: radial-gradient(circle at 78% 18%, rgba(31, 104, 112, .13), transparent 32%), linear-gradient(145deg, #fff9df, #f1e2b6 72%, #fff4d4);
+  }
+
+  .not-found-shell {
+    width: min(100%, 1040px);
+    margin: auto;
+  }
+
+  .not-found-brand {
+    margin-bottom: clamp(28px, 5vh, 52px);
+    color: var(--color-ink);
+  }
+
+  .not-found-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(220px, .9fr);
+    align-items: center;
+    gap: clamp(24px, 5vw, 64px);
+    padding: clamp(24px, 6vw, 72px);
+    border: 1px solid rgba(24, 35, 21, .1);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 249, 223, .78);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .not-found-copy h1 {
+    max-width: 580px;
+    margin-bottom: 20px;
+    font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  }
+
+  .not-found-copy > p:not(.eyebrow) {
+    max-width: 540px;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+  }
+
+  .not-found-copy .not-found-english {
+    margin-top: -8px;
+  }
+
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .not-found-actions .primary {
+    color: var(--color-white);
+    background: var(--color-deep);
+  }
+
+  .not-found-art {
+    position: relative;
+    width: min(100%, 360px);
+    margin-inline: auto;
+    aspect-ratio: 360 / 260;
+  }
+
+  .not-found-art svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .not-found-art span {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 10vw, 7rem);
+    font-weight: 700;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .not-found-location {
+    margin: 22px 0 0;
+    color: var(--color-muted);
+    font-size: .82rem;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 700px) {
+    .not-found-card {
+      grid-template-columns: 1fr;
+    }
+
+    .not-found-art {
+      width: min(76%, 280px);
+    }
+  }
+</style>

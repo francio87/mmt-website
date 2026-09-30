@@ -9,7 +9,7 @@ test('mobile navigation remains available without JavaScript', async ({ browser 
   await context.close();
 });
 
-for (const path of ['/it/', '/en/', '/it/cookie-policy/', '/en/cookie-policy/']) {
+for (const path of ['/it/', '/en/', '/it/cookie-policy/', '/en/cookie-policy/', '/pagina-inesistente/']) {
   test(`accessibility ${path}`, async ({ page }) => {
     await page.goto(path, { waitUntil: 'networkidle' });
     const results = await new AxeBuilder({ page }).analyze();

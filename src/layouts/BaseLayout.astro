@@ -3,15 +3,15 @@ import '../styles/site.css';
 import { site, locales } from '../data/site.js';
 import { getContent } from '../data/content.js';
 import { hero } from '../data/images.js';
-const { lang = 'it', title, description, policy = false, defaultRoute = false } = Astro.props;
+const { lang = 'it', title, description, policy = false, defaultRoute = false, notFound = false } = Astro.props;
 const locale = locales[lang];
-const canonicalPath = defaultRoute
+const canonicalPath = notFound ? null : defaultRoute
   ? (policy ? '/cookie-policy/' : '/')
   : (policy ? `/${lang}/cookie-policy/` : `/${lang}/`);
-const canonical = new URL(canonicalPath, site.url).href;
+const canonical = canonicalPath ? new URL(canonicalPath, site.url).href : null;
 const image = new URL(hero.src, site.url).href;
 const content = getContent(lang);
-const schema = policy ? null : {
+const schema = policy || notFound ? null : {
   '@context': 'https://schema.org',
   '@graph': [
     { '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.name, url: `${site.url}/`, inLanguage: lang === 'it' ? 'it-IT' : 'en-US' },
@@ -28,13 +28,13 @@ const schema = policy ? null : {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script is:inline>document.documentElement.classList.add('js');</script>
   <meta name="description" content={description}>
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="robots" content={notFound ? 'noindex, follow' : 'index, follow, max-image-preview:large'}>
   <meta name="theme-color" content="#0c211f">
-  <link rel="canonical" href={canonical}>
-  <link rel="alternate" hreflang="it" href={`${site.url}/it/` + (policy ? 'cookie-policy/' : '')}>
-  <link rel="alternate" hreflang="en" href={`${site.url}/en/` + (policy ? 'cookie-policy/' : '')}>
-  <link rel="alternate" hreflang="x-default" href={`${site.url}/` + (policy ? 'cookie-policy/' : '')}>
-  <meta property="og:type" content="website"><meta property="og:locale" content={locale.locale}><meta property="og:site_name" content={site.name}><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:image" content={image}>
+  {canonical && <link rel="canonical" href={canonical}>}
+  {!notFound && <link rel="alternate" hreflang="it" href={`${site.url}/it/` + (policy ? 'cookie-policy/' : '')}>}
+  {!notFound && <link rel="alternate" hreflang="en" href={`${site.url}/en/` + (policy ? 'cookie-policy/' : '')}>}
+  {!notFound && <link rel="alternate" hreflang="x-default" href={`${site.url}/` + (policy ? 'cookie-policy/' : '')}>}
+  <meta property="og:type" content="website"><meta property="og:locale" content={locale.locale}><meta property="og:site_name" content={site.name}><meta property="og:title" content={title}><meta property="og:description" content={description}>{canonical && <meta property="og:url" content={canonical}>}<meta property="og:image" content={image}>
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content={title}><meta name="twitter:description" content={description}><meta name="twitter:image" content={image}>
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
