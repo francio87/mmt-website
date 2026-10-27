@@ -6,7 +6,8 @@ on:
       - master
 
 permissions:
-  contents: read
+  # write is needed to create the Git tag and the GitHub release.
+  contents: write
   packages: write
 
 jobs:
@@ -52,3 +53,11 @@ jobs:
             org.opencontainers.image.version=${{ steps.image.outputs.version }}
             org.opencontainers.image.title=Marmitte dei Giganti, Fossombrone: how to visit
             org.opencontainers.image.description=Static Astro website for the Marmitte dei Giganti in Fossombrone.
+
+      # Runs after the push, so a release exists only for a published image.
+      # The tag matches the image version, so Renovate can show these notes in its PRs.
+      - name: Create Git tag and GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.image.outputs.version }}
+        run: gh release create "$VERSION" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --generate-notes
