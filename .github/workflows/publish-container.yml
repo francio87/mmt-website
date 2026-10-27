@@ -53,6 +53,8 @@ jobs:
             org.opencontainers.image.version=${{ steps.image.outputs.version }}
             org.opencontainers.image.title=Marmitte dei Giganti, Fossombrone: how to visit
             org.opencontainers.image.description=Static Astro website for the Marmitte dei Giganti in Fossombrone.
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+            maintainer=Davide <42090061+francio87@users.noreply.github.com>
 
       # Runs after the push, so a release exists only for a published image.
       # The tag matches the image version, so Renovate can show these notes in its PRs.
