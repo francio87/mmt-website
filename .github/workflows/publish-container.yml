@@ -51,3 +51,4 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.version=${{ steps.image.outputs.version }}
             org.opencontainers.image.title=mmt-website
+            org.opencontainers.image.description=Sito statico Astro per le Marmitte dei Giganti di Fossombrone.
