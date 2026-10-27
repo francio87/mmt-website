@@ -6,7 +6,8 @@ on:
       - master
 
 permissions:
-  contents: read
+  # write is needed to create the Git tag and the GitHub release.
+  contents: write
   packages: write
 
 jobs:
@@ -45,6 +46,7 @@ jobs:
             ${{ steps.image.outputs.name }}:${{ steps.image.outputs.version }}
           # Override the labels inherited from the nginx base image, so tools
           # like Renovate and GHCR link this image to its own repository.
+          # "LicenseRef-" is the SPDX form for a non-standard license; see LICENSE.
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.url=https://github.com/${{ github.repository }}
@@ -52,3 +54,14 @@ jobs:
             org.opencontainers.image.version=${{ steps.image.outputs.version }}
             org.opencontainers.image.title=Marmitte dei Giganti, Fossombrone: how to visit
             org.opencontainers.image.description=Static Astro website for the Marmitte dei Giganti in Fossombrone.
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+            maintainer=42090061+francio87@users.noreply.github.com
+            org.opencontainers.image.licenses=LicenseRef-AllRightsReserved
+
+      # Runs after the push, so a release exists only for a published image.
+      # The tag matches the image version, so Renovate can show these notes in its PRs.
+      - name: Create Git tag and GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.image.outputs.version }}
+        run: gh release create "$VERSION" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --generate-notes
