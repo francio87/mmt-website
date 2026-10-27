@@ -43,3 +43,12 @@ jobs:
             ${{ steps.image.outputs.name }}:latest
             ${{ steps.image.outputs.name }}:sha-${{ github.sha }}
             ${{ steps.image.outputs.name }}:${{ steps.image.outputs.version }}
+          # Override the labels inherited from the nginx base image, so tools
+          # like Renovate and GHCR link this image to its own repository.
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.image.outputs.version }}
+            org.opencontainers.image.title=Marmitte dei Giganti, Fossombrone: how to visit
+            org.opencontainers.image.description=Static Astro website for the Marmitte dei Giganti in Fossombrone.
