@@ -1,22 +1,12 @@
 # Marmitte dei Giganti
 
-Sito statico informativo dedicato alle Marmitte dei Giganti di San Lazzaro, Fossombrone.
+Information website about the Marmitte dei Giganti (river potholes) of San Lazzaro, Fossombrone, Italy: [marmittedeigiganti.com](https://marmittedeigiganti.com).
 
-## Sviluppo
+A static, bilingual (Italian and English) site built with [Astro](https://astro.build) and served by Cloudflare. Every push is tested with Playwright; `master` goes to production and other branches get a preview.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-## Build
-
-```bash
-npm run build
-```
-
-Il sito generato si trova in `dist/`.
-
-## Deploy
-
-Ogni push sul branch `master` esegue il build e pubblica esclusivamente `dist/` sull'hosting SFTP tramite GitHub Actions.
+All rights reserved: texts, images and trademarks belong to their respective owners. See [LICENSE](LICENSE).
