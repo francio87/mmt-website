@@ -50,6 +50,8 @@ jobs:
           else
             # Preview alias must be a DNS label: lowercase, a-z0-9-, short enough for "<alias>-mmt-website".
             alias=$(printf '%s' "$BRANCH" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//' | cut -c1-40 | sed -E 's/-+$//')
+            # Previews need an existing Worker: the very first run creates it (only on workers.dev, no custom domain yet).
+            npx --yes wrangler@4 deployments list >/dev/null 2>&1 || npx --yes wrangler@4 deploy
             npx --yes wrangler@4 versions upload --preview-alias "$alias" 2>&1 | tee "$log"
           fi
           url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' "$log" | tail -1)
