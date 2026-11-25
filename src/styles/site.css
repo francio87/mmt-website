@@ -24,6 +24,7 @@
   --color-water: #1f6870;
   --color-deep: #162d22;
   --color-clay: #c87a2f;
+  --color-clay-text: #9c5a1c;
   --color-white: #fff9df;
   --shadow-soft: 0 24px 80px rgba(18, 32, 25, .16);
   --shadow-strong: 0 30px 100px rgba(5, 22, 21, .32);
@@ -171,7 +172,29 @@ a {
 }
 
 .brand-text {
-  font-size: .98rem;
+  font-size: clamp(.8rem, 3.4vw, .98rem);
+  white-space: nowrap;
+}
+
+/* keep "Marmitte dei Giganti" on one line next to lang pill + menu at 360-420px */
+@media (max-width: 419px) {
+  .site-header {
+    gap: 10px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-mark svg {
+    width: 26px;
+    height: 26px;
+  }
 }
 
 .site-nav {
@@ -334,7 +357,7 @@ a {
 
 .eyebrow.dark,
 .section-kicker {
-  color: var(--color-clay);
+  color: var(--color-clay-text);
 }
 
 h1,
@@ -377,7 +400,7 @@ h3 {
 }
 
 .hero-lead {
-  max-width: 720px;
+  max-width: min(720px, 60ch);
   margin: 0 auto 30px;
   color: rgba(255, 250, 241, .9);
   font-size: clamp(1.1rem, 2.4vw, 1.45rem);
@@ -543,8 +566,10 @@ h3 {
   font-size: clamp(1rem, 1.6vw, 1.14rem);
 }
 
-.intro-copy p {
-  max-width: 720px;
+.intro-copy p,
+.story-copy p,
+.visit-note p {
+  max-width: 65ch;
 }
 
 .intro-figure {
@@ -585,6 +610,11 @@ h3 {
   display: grid;
   gap: 34px;
   align-items: center;
+}
+
+/* single column: text first so the Intro photo and this photo are not stacked back-to-back */
+.story-media {
+  order: 1;
 }
 
 .story-media img {
@@ -674,6 +704,7 @@ h3 {
 }
 
 .geology-card p {
+  max-width: 65ch;
   margin-bottom: 0;
 }
 
@@ -739,7 +770,7 @@ h3 {
   display: grid;
   gap: 10px;
   padding: 18px 0 0;
-  margin: auto 0 0;
+  margin: 0;
   border-top: 1px solid rgba(111, 127, 54, .18);
   list-style: none;
 }
@@ -885,7 +916,8 @@ h3 {
   font-weight: 800;
 }
 
-.lightbox-close {
+.lightbox-close,
+.lightbox-nav {
   position: fixed;
   top: clamp(18px, 3vw, 34px);
   right: clamp(18px, 3vw, 34px);
@@ -902,6 +934,29 @@ h3 {
   cursor: pointer;
   font-size: 2rem;
   line-height: 1;
+}
+
+.lightbox-nav {
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  transform: translateY(-50%);
+  font-size: 2.4rem;
+}
+
+.lightbox-prev {
+  right: auto;
+  left: clamp(10px, 3vw, 34px);
+}
+
+.lightbox-next {
+  right: clamp(10px, 3vw, 34px);
+}
+
+.lightbox-close:hover,
+.lightbox-nav:hover {
+  background: rgba(22, 45, 34, .95);
+  border-color: rgba(255, 249, 223, .8);
 }
 
 .map-section {
@@ -980,7 +1035,7 @@ h3 {
 }
 
 .territory .eyebrow {
-  color: var(--color-clay);
+  color: var(--color-clay-text);
 }
 
 .territory-inner p {
@@ -1062,6 +1117,7 @@ h3 {
 .faq-list {
   display: grid;
   gap: 14px;
+  max-width: 780px;
 }
 
 .faq-item {
@@ -1072,13 +1128,49 @@ h3 {
   box-shadow: 0 16px 44px rgba(20, 33, 28, .06);
 }
 
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(111, 127, 54, .38);
+  border-radius: 50%;
+  color: var(--color-deep);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: transform .2s ease;
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
 .faq-item h3 {
-  margin-bottom: 12px;
-  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  margin: 0;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
 }
 
 .faq-item p {
-  margin-bottom: 0;
+  max-width: 65ch;
+  margin: 14px 0 0;
 }
 
 .social {
@@ -1147,7 +1239,8 @@ h3 {
 .site-footer-inner {
   display: grid;
   gap: 26px;
-  padding: 34px clamp(18px, 4vw, 56px) 46px;
+  /* bottom padding clears the fixed .back-to-top button (offset + 52px + gap) */
+  padding: 34px clamp(18px, 4vw, 56px) calc(clamp(18px, 4vw, 34px) + 72px);
 }
 
 .site-footer p {
@@ -1414,6 +1507,10 @@ h3 {
     grid-template-columns: minmax(300px, .9fr) minmax(0, 1.1fr);
   }
 
+  .story-media {
+    order: 0;
+  }
+
   .visit-layout {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1436,14 +1533,6 @@ h3 {
 
   .gallery-item.wide {
     grid-column: span 2;
-  }
-
-  .faq-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .faq-item:first-child {
-    grid-column: 1 / -1;
   }
 
   .site-footer-inner {
@@ -1493,7 +1582,7 @@ h3 {
     animation-iteration-count: 1 !important;
   }
 
-  .reveal {
+  .js .reveal {
     opacity: 1;
     transform: none;
   }

@@ -12,6 +12,8 @@ for (const viewport of viewports) {
     await page.setViewportSize(viewport);
     await page.goto('/it/', { waitUntil: 'networkidle' });
     await expect(page.locator('.hero-content')).toBeVisible();
+    // the Astro dev toolbar is injected by the dev server and is not part of the site
+    await page.addStyleTag({ content: 'astro-dev-toolbar { display: none !important; }' });
     await expect(page).toHaveScreenshot(`home-${viewport.name}.png`, { animations: 'disabled', caret: 'hide' });
   });
 }
