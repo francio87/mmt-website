@@ -1,12 +1,14 @@
 ---
 const { lang, items } = Astro.props;
 const labels = lang === 'en'
-  ? { gallery: 'Enlarged image', close: 'Close enlarged image', top: 'Back to top' }
-  : { gallery: 'Immagine ingrandita', close: 'Chiudi immagine ingrandita', top: 'Torna in cima' };
+  ? { gallery: 'Enlarged image', close: 'Close enlarged image', prev: 'Previous image', next: 'Next image', top: 'Back to top' }
+  : { gallery: 'Immagine ingrandita', close: 'Chiudi immagine ingrandita', prev: 'Immagine precedente', next: 'Immagine successiva', top: 'Torna in cima' };
 ---
 <dialog class="lightbox" aria-label={labels.gallery} data-gallery-dialog data-gallery={JSON.stringify(items)}>
   <button class="lightbox-close" type="button" aria-label={labels.close} data-gallery-close>×</button>
-  <figure class="lightbox-figure"><img src="" alt="" data-gallery-image><figcaption data-gallery-caption></figcaption></figure>
+  <button class="lightbox-nav lightbox-prev" type="button" aria-label={labels.prev} data-gallery-step="-1"><span aria-hidden="true">‹</span></button>
+  <button class="lightbox-nav lightbox-next" type="button" aria-label={labels.next} data-gallery-step="1"><span aria-hidden="true">›</span></button>
+  <figure class="lightbox-figure"><img src="" alt="" data-gallery-image><figcaption data-gallery-caption aria-live="polite"></figcaption></figure>
 </dialog>
 <a class="back-to-top" href="#top" aria-label={labels.top} data-back-to-top><span aria-hidden="true">↑</span><span class="sr-only">{labels.top}</span></a>
 
@@ -15,14 +17,26 @@ const labels = lang === 'en'
   const gallery = JSON.parse(dialog?.dataset.gallery || '[]');
   const image = dialog?.querySelector('[data-gallery-image]');
   const caption = dialog?.querySelector('[data-gallery-caption]');
+  let current = 0;
+
+  const show = (index) => {
+    const item = gallery[index];
+    if (!item || !image || !caption) return false;
+    current = index;
+    image.src = item.src; image.alt = item.alt; caption.textContent = item.caption;
+    return true;
+  };
+  const step = (delta) => show((current + delta + gallery.length) % gallery.length);
 
   document.querySelectorAll('[data-lightbox-index]').forEach((trigger) => trigger.addEventListener('click', () => {
-    const item = gallery[Number(trigger.dataset.lightboxIndex)];
-    if (!item || !image || !caption) return;
-    image.src = item.src; image.alt = item.alt; caption.textContent = item.caption;
-    dialog?.showModal();
+    if (show(Number(trigger.dataset.lightboxIndex))) dialog?.showModal();
   }));
   dialog?.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog.close());
+  dialog?.querySelectorAll('[data-gallery-step]').forEach((button) => button.addEventListener('click', () => step(Number(button.dataset.galleryStep))));
+  dialog?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); step(-1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); step(1); }
+  });
   dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
   dialog?.addEventListener('close', () => image?.removeAttribute('src'));
 </script>
