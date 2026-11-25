@@ -44,14 +44,14 @@ jobs:
           BRANCH: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+          log="$RUNNER_TEMP/deploy.log"
           if [ "$BRANCH" = master ]; then
-            out=$(npx --yes wrangler@4 deploy 2>&1)
+            npx --yes wrangler@4 deploy 2>&1 | tee "$log"
           else
             # Preview alias must be a DNS label: lowercase, a-z0-9-, short enough for "<alias>-mmt-website".
             alias=$(printf '%s' "$BRANCH" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//' | cut -c1-40 | sed -E 's/-+$//')
-            out=$(npx --yes wrangler@4 versions upload --preview-alias "$alias" 2>&1)
+            npx --yes wrangler@4 versions upload --preview-alias "$alias" 2>&1 | tee "$log"
           fi
-          printf '%s\n' "$out"
-          url=$(printf '%s\n' "$out" | grep -oE 'https://[a-z0-9.-]+\.workers\.dev' | tail -1)
+          url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' "$log" | tail -1)
           echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "Deployed: $url" >> "$GITHUB_STEP_SUMMARY"
