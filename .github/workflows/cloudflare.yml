@@ -1,0 +1,57 @@
+name: Test and deploy to Cloudflare
+
+# master -> production deploy; any other branch -> preview version with its own URL.
+on:
+  push:
+    branches: ['**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'master' }}
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'master' && 'production' || 'preview' }}
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Test
+        run: |
+          npx playwright install --with-deps chromium
+          # Visual snapshots are rendered on the dev machine; CI fonts differ, so they stay a local check.
+          npx playwright test --grep-invert visual
+
+      - name: Deploy
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [ "$BRANCH" = master ]; then
+            out=$(npx --yes wrangler@4 deploy 2>&1)
+          else
+            # Preview alias must be a DNS label: lowercase, a-z0-9-, short enough for "<alias>-mmt-website".
+            alias=$(printf '%s' "$BRANCH" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//' | cut -c1-40 | sed -E 's/-+$//')
+            out=$(npx --yes wrangler@4 versions upload --preview-alias "$alias" 2>&1)
+          fi
+          printf '%s\n' "$out"
+          url=$(printf '%s\n' "$out" | grep -oE 'https://[a-z0-9.-]+\.workers\.dev' | tail -1)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed: $url" >> "$GITHUB_STEP_SUMMARY"

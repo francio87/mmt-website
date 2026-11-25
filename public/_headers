@@ -1,0 +1,9 @@
+/build-assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=604800
+
+# workers.dev hosts serve previews and the raw Worker: keep them out of search engines.
+https://:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
