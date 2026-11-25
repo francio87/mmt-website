@@ -1,8 +1,0 @@
-.git
-.github
-.astro
-dist
-node_modules
-test-results
-tests
-SFTP_KNOWN_HOSTS.txt
