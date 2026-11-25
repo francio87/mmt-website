@@ -41,3 +41,6 @@ AGENTS.md
 
 # Astro
 /.astro/
+
+# Wrangler local state
+/.wrangler/
