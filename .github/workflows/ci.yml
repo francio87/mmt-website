@@ -1,0 +1,124 @@
+name: CI
+
+# Every push: build + test. master -> Cloudflare production, then container image and release.
+# Other branches -> Cloudflare preview version with its own URL.
+on:
+  push:
+    branches: ['**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'master' }}
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'master' && 'production' || 'preview' }}
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Test
+        run: |
+          npx playwright install --with-deps chromium
+          # Visual snapshots are rendered on the dev machine; CI fonts differ, so they stay a local check.
+          npx playwright test --grep-invert visual
+
+      - name: Deploy
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/deploy.log"
+          if [ "$BRANCH" = master ]; then
+            npx --yes wrangler@4 deploy 2>&1 | tee "$log"
+          else
+            # Preview alias must be a DNS label: lowercase, a-z0-9-, short enough for "<alias>-mmt-website".
+            alias=$(printf '%s' "$BRANCH" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//' | cut -c1-40 | sed -E 's/-+$//')
+            # Previews need an existing Worker: the very first run creates it (only on workers.dev, no custom domain yet).
+            npx --yes wrangler@4 deployments list >/dev/null 2>&1 || npx --yes wrangler@4 deploy
+            npx --yes wrangler@4 versions upload --preview-alias "$alias" 2>&1 | tee "$log"
+          fi
+          url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' "$log" | tail -1)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed: $url" >> "$GITHUB_STEP_SUMMARY"
+
+  container:
+    needs: test-and-deploy
+    if: github.ref_name == 'master'
+    runs-on: ubuntu-latest
+    permissions:
+      # write is needed to create the Git tag and the GitHub release.
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Set image name
+        id: image
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          # Next patch after the latest release (1.0.8 -> 1.0.9).
+          last=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName 2>/dev/null || echo 1.0.-1)
+          echo "version=${last%.*}.$(( ${last##*.} + 1 ))" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.image.outputs.name }}:latest
+            ${{ steps.image.outputs.name }}:sha-${{ github.sha }}
+            ${{ steps.image.outputs.name }}:${{ steps.image.outputs.version }}
+          # Override the labels inherited from the nginx base image, so tools
+          # like Renovate and GHCR link this image to its own repository.
+          # "LicenseRef-" is the SPDX form for a non-standard license; see LICENSE.
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.image.outputs.version }}
+            org.opencontainers.image.title=Marmitte dei Giganti, Fossombrone: how to visit
+            org.opencontainers.image.description=Static Astro website for the Marmitte dei Giganti in Fossombrone.
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+            maintainer=42090061+francio87@users.noreply.github.com
+            org.opencontainers.image.licenses=LicenseRef-AllRightsReserved
+
+      # Runs after the push, so a release exists only for a published image.
+      # The tag matches the image version, so Renovate can show these notes in its PRs.
+      - name: Create Git tag and GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.image.outputs.version }}
+        run: gh release create "$VERSION" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --generate-notes
